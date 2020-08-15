@@ -10,8 +10,8 @@ const key = "fb0f4f8c5e465acc875b422007b6928e";
 
 // display weather on click
 const searchBtn = document.querySelector("#search-btn");
-searchBtn.addEventListener("click", function() {
-	let api = `http://api.openweathermap.org/data/2.5/weather?q=${getLocation()}&appid=${key}`;
+searchBtn.addEventListener("click", function () {
+	let api = `https://api.openweathermap.org/data/2.5/weather?q=${getLocation()}&appid=${key}`;
 
 	fetch(api)
 		.then((res) => res.json())
@@ -35,7 +35,7 @@ searchBtn.addEventListener("click", function() {
 			const getWeatherDescription = data.weather[0].description;
 			weatherDescription.innerText = getWeatherDescription;
 		});
-})
+});
 
 // search location
 function getLocation() {
