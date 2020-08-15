@@ -17,8 +17,8 @@ searchBtn.addEventListener("click", function () {
 		.then((res) => res.json())
 		.then((data) => {
 			// weather image
-			const getImageId = data.weather[0].icon;
-			weatherImg.src = `images/icons/weather-icons/${getImageId}.png`;
+			let getImageId = data.weather[0].icon;
+			weatherImg.src = `../../images/icons/weather-icons/${getImageId}.png`;
 			// location
 			const getSearchedLocation = `${data.name}, ${data.sys.country}`;
 			locationElement.innerText = getSearchedLocation;
