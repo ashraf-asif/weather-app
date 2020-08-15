@@ -23,26 +23,34 @@
 </head>
 
 <body>
-  <!-- weather -->
-  <div class="weather container">
-    <div class="app-title">Weather</div>
-    <div class="notification"></div>
-    <div class="weather-container">
-      <div class="weather-icon">
-        <img class="img-fluid" src="./images/icons/weather-icons/unknown.png" alt="">
+  <!-- *weather -->
+  <button id="change-unit" class="btn btn-danger" title="Change unit"><h3 id="unit">C</h3></button>
+  <div class="container">
+    <form class="col-md-6 m-auto py-5">
+      <!-- search location -->
+      <div class="input-group mb-3">
+        <!-- input location -->
+        <input id="input-location" type="text" class="form-control" placeholder="Enter a location for Weather ..." value="dhaka">
+        <div class="input-group-append">
+          <!-- search button -->
+          <button id="search-btn" type="button" class="btn btn-danger">Search</button>
+        </div>
       </div>
-      <div class="temperature-value">
-        <p>- &deg; <span>C</span></p>
-      </div>
-      <div class="temperature-description">
-        <p> - </p>
-      </div>
-      <div class="location">
-        <p> - </p>
-      </div>
+    </form>
+    <div class="weather-status text-white text-center">
+      <!-- weather image -->
+      <img id="weather-img" src="./images/icons/weather-icons/unknown.png" alt="">
+      <!-- location -->
+      <h1 id="location"> - </h1>
+      <!-- temperature -->
+      <h3 id="temperature-value"> - </h3>
+      <!-- temperature feels like -->
+      <h3 id="feels-like"> - </h3>
+      <!-- weather description -->
+      <h1 id="weather-description" class="lead"> - </h1>
     </div>
   </div>
-  <!-- weather -->
+  <!-- *weather -->
 
 
 

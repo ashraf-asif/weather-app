@@ -1,94 +1,73 @@
 // select elements
-const notification = document.querySelector(".notification");
-const weatherIcon = document.querySelector(".weather-icon");
-const temperatureValue = document.querySelector(".temperature-value p");
-const temperatureDescription = document.querySelector(
-	".temperature-description p"
-);
-const locationElement = document.querySelector(".location p");
+const weatherImg = document.querySelector("#weather-img");
+const locationElement = document.querySelector("#location");
+const temperatureValue = document.querySelector("#temperature-value");
+const feelsLike = document.querySelector("#feels-like");
+const weatherDescription = document.querySelector("#weather-description");
 
-// weather object
-const weather = {};
-
-weather.temperature = {
-	unit: "celsius",
-};
-
-// kelvin value
-const KELVIN = 273;
 // API key
 const key = "fb0f4f8c5e465acc875b422007b6928e";
 
-// check browser support
-if ("geolocation" in navigator) {
-	navigator.geolocation.getCurrentPosition(setPosition, showError);
-} else {
-	notification.style.display = "block";
-	notification.innerHTML = `<p>Browser doesn't Support Geolocation</p>`;
-}
+// display weather on click
+const searchBtn = document.querySelector("#search-btn");
+searchBtn.addEventListener("click", function() {
+	let api = `http://api.openweathermap.org/data/2.5/weather?q=${getLocation()}&appid=${key}`;
 
-// set user's position
-function setPosition(position) {
-	let latitude = position.coords.latitude;
-	let longitude = position.coords.longitude;
-	getWeather(latitude, longitude);
-}
+	fetch(api)
+		.then((res) => res.json())
+		.then((data) => {
+			// weather image
+			const getImageId = data.weather[0].icon;
+			weatherImg.src = `../../images/icons/weather-icons/${getImageId}.png`;
+			// location
+			const getSearchedLocation = `${data.name}, ${data.sys.country}`;
+			locationElement.innerText = getSearchedLocation;
+			// temperature value
+			const getTemperature = Math.floor(data.main.temp - 273);
+			window.getTemperature = getTemperature;
+			temperatureValue.innerText = `${getTemperature}°C`;
+			// temperature feels like
+			const getFeelsLike = Math.floor(data.main.feels_like - 273);
+			window.getFeelsLike = getFeelsLike;
+			feelsLike.innerText = `Feels like ${getFeelsLike}°C`;
 
-// show error
-function showError(error) {
-	notification.style.display = "block";
-	notification.innerHTML = `<p> ${error.message} </p>`;
-}
+			// weather description
+			const getWeatherDescription = data.weather[0].description;
+			weatherDescription.innerText = getWeatherDescription;
+		});
+})
 
-// get weather from api 
-function getWeather(latitude, longitude) {
-  let api = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`;
+// search location
+function getLocation() {
+	const inputLocation = document.querySelector("#input-location");
+	const cityName = inputLocation.value;
 
-  console.log(api);
-
-  fetch(api)
-  .then(function(response) {
-    let data = response.json();
-    return data;
-  })
-  .then(function(data) {
-    weather.temperature.value = Math.floor(data.main.temp - KELVIN);
-    weather.description = data.weather[0].description;
-    weather.iconId = data.weather[0].icon;
-    weather.city = data.name;
-    weather.country = data.sys.country;
-  })
-  .then(function() {
-    displayWeather();
-  })
-}
-
-//display weather
-function displayWeather() {
-  weatherIcon.innerHTML = `<img src="../../images/icons/weather-icons/${weather.iconId}.png">`;
-  temperatureValue.innerHTML = `${weather.temperature.value} ° <span>C</span>`;
-  temperatureDescription.innerHTML = weather.description;
-  locationElement.innerHTML = `${weather.city}, ${weather.country}`;
+	return cityName;
 }
 
 // click to convert
-temperatureValue.addEventListener("click", () => {
-  if (weather.temperature.value === undefined) {
-    return;
-  }
-	if (weather.temperature.unit === "celsius") {
-		let fahrenheit = celsiusToFahrenheit(weather.temperature.value);
-		fahrenheit = Math.floor(fahrenheit);
+const changeUnitBtn = document.querySelector("#change-unit");
+changeUnitBtn.addEventListener("click", () => {
+	const unit = document.querySelector("#unit");
+	if (unit.innerText === "C") {
+		unit.innerText = "F";
 
-		temperatureValue.innerHTML = `${fahrenheit} ° <span>F</span>`;
-		weather.temperature.unit = "fahrenheit";
+		let fahrenheit = celsiusToFahrenheit(getTemperature);
+		fahrenheit = Math.floor(fahrenheit);
+		temperatureValue.innerText = `${fahrenheit}°F`;
+
+		fahrenheit = celsiusToFahrenheit(getFeelsLike);
+		fahrenheit = Math.floor(fahrenheit);
+		feelsLike.innerText = `Feels like ${fahrenheit}°F`;
 	} else {
-		temperatureValue.innerHTML = `${weather.temperature.value} ° <span>C</span>`;
-		weather.temperature.unit = "celsius";
+		unit.innerText = "C";
+
+		temperatureValue.innerText = `${getTemperature}°C`;
+		feelsLike.innerText = `Feels like ${getFeelsLike}°C`;
 	}
 });
 
 // fahrenheit vs celsius converters
-const celsiusToFahrenheit = (temperature) => {
-	return (9 * temperature + 32 * 5) / 5;
+const celsiusToFahrenheit = (celsiusValue) => {
+	return (9 * celsiusValue + 32 * 5) / 5;
 };
